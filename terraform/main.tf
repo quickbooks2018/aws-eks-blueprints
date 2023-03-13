@@ -306,6 +306,11 @@ module "eks" {
       username = module.eks_admins_iam_role.iam_role_name
       groups   = ["system:masters"]
     },
+    {
+      rolearn  = module.eks_developers_iam_role.iam_role_arn
+      username = module.eks_developers_iam_role.iam_role_name
+      groups   = ["reader"]
+    },
 
   ]
 

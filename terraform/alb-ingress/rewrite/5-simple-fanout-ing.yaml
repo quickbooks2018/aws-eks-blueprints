@@ -25,9 +25,11 @@ metadata:
     alb.ingress.kubernetes.io/success-codes: '200,302'
     alb.ingress.kubernetes.io/load-balancer-attributes: deletion_protection.enabled=false
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:368646418583:certificate/87fe8483-604d-4545-8b58-c6831234d917
-    
+    # https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/2082
     # https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/835
     # https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/
+    # https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/1571
+    # 
     # seems like not supported yet
 spec:
   ingressClassName: alb
@@ -35,7 +37,7 @@ spec:
   - host: api.cmcloudlab1778.info
     http:
       paths:
-      - path: /foo
+      - path: /
         pathType: Prefix
         backend:
           service:

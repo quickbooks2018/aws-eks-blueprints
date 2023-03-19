@@ -24,11 +24,15 @@ metadata:
     alb.ingress.kubernetes.io/unhealthy-threshold-count: '2'
     alb.ingress.kubernetes.io/success-codes: '200,302'
     alb.ingress.kubernetes.io/load-balancer-attributes: deletion_protection.enabled=false
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:633321192470:certificate/39a5f15a-722d-4e0c-8205-d4a2ab8d15f1
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:368646418583:certificate/87fe8483-604d-4545-8b58-c6831234d917
+    
+    # https://github.com/kubernetes-sigs/aws-load-balancer-controller/issues/835
+    # https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/guide/ingress/annotations/
+    # seems like not supported yet
 spec:
   ingressClassName: alb
   rules:
-  - host: api.cmcloudlab431.info
+  - host: api.cmcloudlab1778.info
     http:
       paths:
       - path: /foo

@@ -521,7 +521,7 @@ provider "kubernetes" {
 
 # Sub Module
 module "kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.25.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.26.0"
 
   eks_cluster_id               = module.eks.cluster_name
   eks_cluster_endpoint         = module.eks.cluster_endpoint
@@ -534,6 +534,11 @@ module "kubernetes_addons" {
   enable_aws_load_balancer_controller = true
   enable_metrics_server               = true
   enable_cluster_autoscaler           = false
+  # https://aws-ia.github.io/terraform-aws-eks-blueprints/v4.26.0/add-ons/secrets-store-csi-driver/
+  # https://github.com/aws-ia/terraform-aws-eks-blueprints/issues/1355
+  enable_secrets_store_csi_driver_provider_aws = false
+
+  enable_secrets_store_csi_driver     = true
 
   enable_karpenter = true
   karpenter_helm_config = {

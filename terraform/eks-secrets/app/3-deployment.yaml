@@ -46,5 +46,5 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: secrets-store-inline
-          mountPath: "/mnt/secrets-store"
+          mountPath: "/mnt/secrets-store/cloudgeeks-ca"
           readOnly: true

@@ -15,10 +15,8 @@
         "Sid": "AllowSecretsManagerAccess",
         "Effect": "Allow",
         "Action": [
-            "secretsmanager:GetResourcePolicy",
             "secretsmanager:GetSecretValue",
-            "secretsmanager:DescribeSecret",
-            "secretsmanager:ListSecretVersionIds"
+            "secretsmanager:DescribeSecret"
         ],
         "Resource": "*"
         }

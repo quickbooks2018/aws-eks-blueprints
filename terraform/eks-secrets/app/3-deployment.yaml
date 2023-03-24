@@ -1,10 +1,9 @@
-# https://github.com/aws/secrets-store-csi-driver-provider-aws/tree/main/examples
-# https://github.com/aws/secrets-store-csi-driver-provider-aws
 ---
 kind: Service
 apiVersion: v1
 metadata:
   name: nginx-deployment
+  namespace: app
   labels:
     app: nginx
 spec:
@@ -19,6 +18,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nginx-deployment
+  namespace: app
   labels:
     app: nginx
 spec:
@@ -41,7 +41,7 @@ spec:
             secretProviderClass: "nginx-deployment-aws-secrets"
       containers:
       - name: nginx-deployment
-        image: nginx
+        image: nginx:latest
         ports:
         - containerPort: 80
         volumeMounts:

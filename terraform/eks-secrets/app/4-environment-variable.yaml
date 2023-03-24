@@ -1,0 +1,53 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: aws-secrets
+spec:
+  provider: aws
+  parameters:
+    objects: |
+      - objectName: "DBSecret" # name of the AWS Secret Manager secret
+        objectType: "secretsmanager" # type of object stored in AWS Secrets Manager
+        jmesPath: "username" # JMESPath expression to extract a specific value from the secret
+        objectAlias: "DB_USER" # name of the environment variable that will be created in the pod
+      - objectName: "DBSecret"
+        objectType: "secretsmanager"
+        jmesPath: "password"
+        objectAlias: "DB_PASS"
+  secretObjects: # Kubernetes secret that will be created from the mounted file
+    - secretName: db-creds # name of the Kubernetes secret
+      type: Opaque
+      data:
+        - objectName: DB_USER # name of the environment variable
+          key: username # key of the secret data
+        - objectName: DB_PASS
+          key: password
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-secrets-store-inline
+spec:
+  replicas: 2 # number of pods to create
+  selector:
+    matchLabels:
+      app: nginx # label to identify the pods
+  template:
+    metadata:
+      labels:
+        app: nginx # label to apply to the pods
+    spec:
+      serviceAccountName: sa-irsa # name of the service account that has an IAM role associated with it
+      containers:
+        - image: nginx
+          name: nginx
+          envFrom:
+            - secretRef:
+                name: db-creds # name of the Kubernetes secret that will be used as environment variables
+      volumes:
+        - name: secrets-store-inline
+          csi:
+            driver: secrets-store.csi.k8s.io # name of the CSI driver
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "aws-secrets" # name of the SecretProviderClass resource

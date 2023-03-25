@@ -1,4 +1,5 @@
 # https://towardsaws.com/aws-secret-manager-on-eks-e050b38bc77d
+# https://archive.eksworkshop.com/beginner/194_secrets_manager/sync_native_secrets_env/
 apiVersion: secrets-store.csi.x-k8s.io/v1
 kind: SecretProviderClass
 metadata:

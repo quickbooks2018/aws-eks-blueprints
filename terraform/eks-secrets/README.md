@@ -4,7 +4,7 @@
 
 - Step2 Install CSI Secret Store Provider for AWS https://github.com/aws/secrets-store-csi-driver-provider-aws
 
-# https://github.com/aws/secrets-store-csi-driver-provider-aws/issues/58
+- https://github.com/aws/secrets-store-csi-driver-provider-aws/issues/58
 ```helm
 helm repo add secrets-store-csi-driver https://kubernetes-sigs.github.io/secrets-store-csi-driver/charts
 helm upgrade --install -n kube-system --set syncSecret.enabled=true csi-secrets-store secrets-store-csi-driver/secrets-store-csi-driver

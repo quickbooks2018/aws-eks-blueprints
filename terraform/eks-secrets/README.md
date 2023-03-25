@@ -25,3 +25,9 @@ kubectl get csinode
 ```kubectl
 kubectl get daemonset -A
 ```
+
+- AWSCLI Secrets Creations
+```awscli
+export REGION='us-east-1'
+aws --region "$REGION" secretsmanager  create-secret --name test-secret --secret-string '{"username":"asim", "password":"12345678"}'
+```

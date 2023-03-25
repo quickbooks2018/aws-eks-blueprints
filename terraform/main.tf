@@ -538,7 +538,7 @@ module "kubernetes_addons" {
   # https://github.com/aws-ia/terraform-aws-eks-blueprints/issues/1355
   enable_secrets_store_csi_driver_provider_aws = false
 
-  enable_secrets_store_csi_driver     = true
+  enable_secrets_store_csi_driver     = false # Use HELM for Installation, do not USE THIS
 
   enable_karpenter = true
   karpenter_helm_config = {

@@ -75,7 +75,7 @@ data:
     [OUTPUT]
         Name            es
         Match           *
-        Host            vpc-cloudgeeks-dev-es-h33mbyoxravonbwl4dpoo2off4.us-east-1.es.amazonaws.com
+        Host            elasticsearch.cmcloudlab1620.info
         Port            443
         TLS             On
         AWS_Auth        On

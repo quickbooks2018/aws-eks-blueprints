@@ -146,6 +146,7 @@ module "eks" {
       type                       = "ingress"
       source_node_security_group = true
     }
+
   }
 
   node_security_group_additional_rules = {
@@ -202,9 +203,9 @@ module "eks" {
   eks_managed_node_groups = {
 
     on-demand = {
-      min_size     = 2
-      max_size     = 2
-      desired_size = 2
+      min_size     = 3
+      max_size     = 3
+      desired_size = 3
       update_config = {
         max_unavailable = 1
       }

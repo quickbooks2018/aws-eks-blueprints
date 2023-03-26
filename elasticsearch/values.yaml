@@ -2231,11 +2231,12 @@ sysctlImage:
 ## @param kibana.elasticsearch.port Port to connect Kibana and ES instance. Used to generate the URL
 ##
 # https://github.com/bitnami/charts/issues/12882
+# https://github.com/bitnami/charts/blob/main/bitnami/kibana/values.yaml
 kibana:
   security:
     auth:
-      enabled: true
-      kibanaPassword: kibana
+      enabled: false
+      kibanaPassword: "kibana"
     tls:
       # Instruct kibana to connect to elastic over https
       enabled: true

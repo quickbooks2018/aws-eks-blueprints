@@ -1,0 +1,13 @@
+# https://github.com/bitnami/charts
+
+# https://artifacthub.io/packages/helm/bitnami/elasticsearch
+
+helm repo list
+
+helm repo update
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm dependency build
+
+helm upgrade --install elastic --namespace elastic --create-namespace ./ -f values.yaml --set image.tag=7.17.8,global.kibanaEnabled=true,image.pullPolicy=IfNotPresent,master.replicaCount=2,master.persistence.size=10Gi,data.replicaCount=2,data.persistence.size=10Gi,ingest.enabled=true,metrics.enabled=true --render-subchart-notes

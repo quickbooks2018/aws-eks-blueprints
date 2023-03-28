@@ -1,3 +1,11 @@
+# https://docs.fluentbit.io/manual/
+# https://docs.fluentbit.io/manual/installation/getting-started-with-fluent-bit
+# https://docs.fluentbit.io/manual/pipeline/filters/kubernetes
+# https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit
+# https://github.com/microsoft/fluentbit-containerd-cri-o-json-log/blob/main/config.yaml
+
+# https://docs.fluentbit.io/manual/pipeline/filters/kubernetes#configuration-parameters
+# https://newrelic.com/blog/how-to-relic/disable-new-relic-logging-for-kubernetes#:~:text=More%20specifically%2C%20when%20you%20define,you%20first%20enable%20K8S%2DLogging.
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -33,55 +41,82 @@ metadata:
 data:
   # Configuration files: server, input, filters and output
   # ======================================================
-  parsers.conf: |-
-    [PARSER]
-        Name        docker
-        Format      json
-        Time_Key    time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
-  custom_parsers.conf: |
-    [PARSER]
-        Name docker_no_time
-        Format json
-        Time_Keep Off
-        Time_Key time
-        Time_Format %Y-%m-%dT%H:%M:%S.%L
   fluent-bit.conf: |
     [SERVICE]
-        Flush 1
-        Daemon Off
-        Log_Level info
-        Parsers_File parsers.conf
-        HTTP_Server On
-        HTTP_Listen 0.0.0.0
-        HTTP_Port 2020
+        Flush         1
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
+    @INCLUDE input-kubernetes.conf
+    @INCLUDE filter-kubernetes.conf
+    @INCLUDE output.conf
+
+  input-kubernetes.conf: |
     [INPUT]
-        Name tail
-        Path /var/log/containers/*.log
-        Parser docker
-        Tag kube.*
-        Mem_Buf_Limit 5MB
-        Skip_Long_Lines On
+        Name              tail
+        Tag               kube.*
+        Path              /var/log/containers/*.log
+        Parser            cri
+        DB                /var/log/flb_kube.db
+        Mem_Buf_Limit     5MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+  filter-kubernetes.conf: |
     [FILTER]
-        Name kubernetes
-        Match kube.*
-        Merge_Log On
-        Merge_Log_Trim On
-        Labels On
-        Annotations Off
-        K8S-Logging.Parser Off
-        K8S-Logging.Exclude Off
-    [INPUT]
-        Name systemd
-        Tag host.*
-        Systemd_Filter _SYSTEMD_UNIT=kubelet.service
-        Read_From_Tail On
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
+        Kube_Tag_Prefix     kube.var.log.containers.
+        Merge_Log           On
+        Merge_Log_Trim      On
+        Keep_Log            Off
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+        Annotations         Off
+        Labels              On
+    [FILTER]
+        Name          nest
+        Match         kube.*
+        Operation     lift
+        Nested_under  kubernetes
+        Add_prefix    kubernetes_
+    [FILTER]
+        Name          nest
+        Match         kube.*
+        Operation     lift
+        Nested_under  kubernetes_labels
+        Add_prefix    kubernetes_labels_
+  parsers.conf: |
+    [PARSER]
+        Name        json
+        Format      json
+        Time_Key    time
+        Time_Format %d/%b/%Y:%H:%M:%S %z
+        Time_Keep   Off
+    [PARSER]
+        Name docker
+        Format json
+        Time_Key time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep Off
+    [PARSER]
+        Name        cri
+        Format      regex
+        Regex       ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L%z
+  output.conf: |
     [OUTPUT]
         Name es
         Match kube.*
         Host elasticsearch.logging.svc.cluster.local
         Port  9200
-        Index my_index
+        Index kuernetes_index
 
 ---
 
@@ -109,10 +144,12 @@ spec:
         prometheus.io/scrape: "true"
         prometheus.io/port: "2020"
         prometheus.io/path: /api/v1/metrics/prometheus
+        fluentbit.io/exclude: "true"
+        
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:1.8-debug
+        image: fluent/fluent-bit:2.0.10
         imagePullPolicy: Always
         ports:
           - containerPort: 2020

@@ -2234,10 +2234,10 @@ sysctlImage:
 # https://github.com/bitnami/charts/blob/main/bitnami/kibana/values.yaml
 kibana:
   image:
-  registry: docker.io
-  repository: bitnami/kibana
-  tag: 7.17.8
-  digest: ""
+    registry: docker.io
+    repository: bitnami/kibana
+    tag: 7.17.8
+    digest: ""
 
   security:
     auth:

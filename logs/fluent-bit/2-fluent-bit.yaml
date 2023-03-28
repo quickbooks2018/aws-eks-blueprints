@@ -62,7 +62,7 @@ data:
         Parser            cri
         DB                /var/log/flb_kube.db
         Mem_Buf_Limit     5MB
-        Skip_Long_Lines   On
+        Skip_Long_Lines   Off
         Refresh_Interval  10
   filter-kubernetes.conf: |
     [FILTER]

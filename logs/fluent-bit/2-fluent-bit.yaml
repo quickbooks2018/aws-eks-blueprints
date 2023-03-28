@@ -116,7 +116,7 @@ data:
         Match kube.*
         Host elasticsearch.logging.svc.cluster.local
         Port  9200
-        Index kuernetes_index
+        Index kubernetes_index
 
 ---
 

@@ -12,8 +12,8 @@ helm dependency build
 
 helm upgrade --install elasticsearch --namespace logging --create-namespace --values=values.yaml --set image.tag=7.17.8,global.kibanaEnabled=true,image.pullPolicy=IfNotPresent,master.replicaCount=3,master.persistence.size=100Gi,data.replicaCount=3,data.persistence.size=100Gi,ingest.enabled=true,metrics.enabled=true --render-subchart-notes --wait ./
 
-# The above command sets the Elasticsearch cluster name to elastic-cluster and REST port number to 8080
 
+# Password
 helm upgrade --install elasticsearch --namespace logging --create-namespace --values=security-values.yaml --set image.tag=7.17.8,global.kibanaEnabled=true,image.pullPolicy=IfNotPresent,master.replicaCount=3,master.persistence.size=100Gi,data.replicaCount=3,data.persistence.size=100Gi,ingest.enabled=true,metrics.enabled=true --render-subchart-notes --wait ./
 
 # Github issues

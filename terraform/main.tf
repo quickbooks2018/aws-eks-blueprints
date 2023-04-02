@@ -521,7 +521,7 @@ provider "kubernetes" {
 
 # Sub Module
 module "kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.26.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.27.0"
 
   eks_cluster_id               = module.eks.cluster_name
   eks_cluster_endpoint         = module.eks.cluster_endpoint

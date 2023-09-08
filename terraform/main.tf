@@ -518,6 +518,8 @@ provider "kubernetes" {
 # https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons (Note this is removed 404)
 # Example https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/examples/karpenter/main.tf
 # https://github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0
+3 https://registry.terraform.io/modules/aws-ia/eks-blueprints-addons/aws/latest
+
 
 # Sub Module
 module "kubernetes_addons" {

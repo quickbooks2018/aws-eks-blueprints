@@ -114,8 +114,6 @@ module "eks" {
   cluster_endpoint_public_access  = true
 
 
-
-
   cluster_addons = {
     coredns = {
       resolve_conflicts_on_update = "OVERWRITE"
@@ -543,7 +541,7 @@ module "kubernetes_addons" {
     name       = "karpenter"
     chart      = "karpenter"
     repository = "oci://public.ecr.aws/karpenter"
-    version    = "v0.27.0"
+    version    = "v0.30.0"
     namespace  = "karpenter"
   }
 }

@@ -7,7 +7,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.55.0"
+      version = "> 4.55.0"
     }
 
     kubectl = {
@@ -57,7 +57,7 @@ locals {
 # https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest
 module "vpc" {
   source  = "registry.terraform.io/terraform-aws-modules/vpc/aws"
-  version = "3.19.0"
+  version = "5.1.2"
 
   name = local.cluster_name
 
@@ -118,14 +118,14 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      resolve_conflicts = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
     }
     kube-proxy = {}
     vpc-cni = {
-      resolve_conflicts = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
     }
     aws-ebs-csi-driver = {
-      resolve_conflicts = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
     }
   }
 
@@ -146,7 +146,6 @@ module "eks" {
       type                       = "ingress"
       source_node_security_group = true
     }
-
   }
 
   node_security_group_additional_rules = {
@@ -203,9 +202,9 @@ module "eks" {
   eks_managed_node_groups = {
 
     on-demand = {
-      min_size     = 3
-      max_size     = 3
-      desired_size = 3
+      min_size     = 2
+      max_size     = 2
+      desired_size = 2
       update_config = {
         max_unavailable = 1
       }
@@ -516,28 +515,31 @@ provider "kubernetes" {
 }
 
 # Eks Blueprints Addons Module
-# https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons
+# https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons (Note this is removed 404)
 # Example https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/examples/karpenter/main.tf
 # https://github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0
+# https://registry.terraform.io/modules/aws-ia/eks-blueprints-addons/aws/latest
+
 
 # Sub Module
 module "kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.25.0"
+  source = "aws-ia/eks-blueprints-addons/aws"
+  version = "1.7.2"
 
-  eks_cluster_id               = module.eks.cluster_name
-  eks_cluster_endpoint         = module.eks.cluster_endpoint
-  eks_oidc_provider            = module.eks.oidc_provider
-  eks_cluster_version          = local.cluster_version
-  eks_worker_security_group_id = module.eks.node_security_group_id
+  cluster_name                           = module.eks.cluster_name
+  cluster_endpoint                       = module.eks.cluster_endpoint
+  oidc_provider_arn                      = module.eks.oidc_provider
+  cluster_version                        = module.eks.cluster_version
 
-
+ 
 
   enable_aws_load_balancer_controller = true
   enable_metrics_server               = true
   enable_cluster_autoscaler           = false
 
   enable_karpenter = true
-  karpenter_helm_config = {
+
+  karpenter = {
     name       = "karpenter"
     chart      = "karpenter"
     repository = "oci://public.ecr.aws/karpenter"

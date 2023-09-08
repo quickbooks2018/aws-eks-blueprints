@@ -515,21 +515,21 @@ provider "kubernetes" {
 }
 
 # Eks Blueprints Addons Module
-# https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons
+# https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons (Note this is removed 404)
 # Example https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/examples/karpenter/main.tf
 # https://github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0
 
 # Sub Module
 module "kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.25.0"
+  source = "aws-ia/eks-blueprints-addons/aws"
+  version = "1.7.2"
 
-  eks_cluster_id               = module.eks.cluster_name
-  eks_cluster_endpoint         = module.eks.cluster_endpoint
-  eks_oidc_provider            = module.eks.oidc_provider
-  eks_cluster_version          = local.cluster_version
-  eks_worker_security_group_id = module.eks.node_security_group_id
+  cluster_name                           = module.eks.cluster_name
+  cluster_endpoint                       = module.eks.cluster_endpoint
+  oidc_provider_arn                      = module.eks.oidc_provider
+  cluster_version                        = module.eks.cluster_version
 
-
+ 
 
   enable_aws_load_balancer_controller = true
   enable_metrics_server               = true

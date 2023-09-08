@@ -118,14 +118,14 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      resolve_conflicts = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
     }
     kube-proxy = {}
     vpc-cni = {
-      resolve_conflicts = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
     }
     aws-ebs-csi-driver = {
-      resolve_conflicts = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
     }
   }
 
@@ -518,9 +518,6 @@ provider "kubernetes" {
 # https://github.com/aws-ia/terraform-aws-eks-blueprints/tree/main/modules/kubernetes-addons (Note this is removed 404)
 # Example https://github.com/aws-ia/terraform-aws-eks-blueprints/blob/main/examples/karpenter/main.tf
 # https://github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0
-
-
-
 # https://registry.terraform.io/modules/aws-ia/eks-blueprints-addons/aws/latest
 
 
@@ -541,7 +538,8 @@ module "kubernetes_addons" {
   enable_cluster_autoscaler           = false
 
   enable_karpenter = true
-  karpenter_helm_config = {
+
+  karpenter = {
     name       = "karpenter"
     chart      = "karpenter"
     repository = "oci://public.ecr.aws/karpenter"

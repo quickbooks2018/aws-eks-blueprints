@@ -498,10 +498,8 @@ module "eks_developers_iam_group" {
 }
 
 
-# https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2009
-#####################
+
 # Kubernetes Provider
-#####################
 data "aws_eks_cluster" "default" {
   name = module.eks.cluster_name
 }
@@ -529,30 +527,29 @@ provider "kubernetes" {
 # https://github.com/aws-ia/terraform-aws-eks-blueprints?ref=v4.25.0
 # https://registry.terraform.io/modules/aws-ia/eks-blueprints-addons/aws/latest
 
-
+# https://github.com/aws-ia/terraform-aws-eks-blueprints/issues/1630
+# https://github.com/aws-ia/terraform-aws-eks-blueprints/releases
 # Sub Module
 module "kubernetes_addons" {
-  source = "aws-ia/eks-blueprints-addons/aws"
-  version = "1.8.0"
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.32.1"
+  eks_cluster_id               = module.eks.cluster_name
+  eks_cluster_endpoint         = module.eks.cluster_endpoint
+  eks_oidc_provider            = module.eks.oidc_provider
+  eks_cluster_version          = local.cluster_version
+  eks_worker_security_group_id = module.eks.node_security_group_id
 
-  cluster_name                           = module.eks.cluster_name
-  cluster_endpoint                       = module.eks.cluster_endpoint
-  oidc_provider_arn                      = module.eks.oidc_provider
-  cluster_version                        = module.eks.cluster_version
 
- 
 
   enable_aws_load_balancer_controller = true
   enable_metrics_server               = true
   enable_cluster_autoscaler           = false
 
   enable_karpenter = true
-
-  karpenter = {
+  karpenter_helm_config = {
     name       = "karpenter"
     chart      = "karpenter"
     repository = "oci://public.ecr.aws/karpenter"
-    version    = "v0.29.0"
+    version    = "v0.27.0"
     namespace  = "karpenter"
   }
 }
@@ -561,7 +558,6 @@ provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
-    token                  = data.aws_eks_cluster_auth.default.token
 
     exec {
       api_version = "client.authentication.k8s.io/v1beta1"

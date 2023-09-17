@@ -103,7 +103,7 @@ module "vpc" {
 # https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest
 module "eks" {
   source  = "registry.terraform.io/terraform-aws-modules/eks/aws"
-  version = "19.10.0"
+  version = "19.16.0"
 
   cluster_name                    = local.cluster_name
   cluster_version                 = local.cluster_version
@@ -522,7 +522,7 @@ provider "kubernetes" {
 # Sub Module
 module "kubernetes_addons" {
   source = "aws-ia/eks-blueprints-addons/aws"
-  version = "1.7.2"
+  version = "1.8.0"
 
   cluster_name                           = module.eks.cluster_name
   cluster_endpoint                       = module.eks.cluster_endpoint
@@ -541,7 +541,7 @@ module "kubernetes_addons" {
     name       = "karpenter"
     chart      = "karpenter"
     repository = "oci://public.ecr.aws/karpenter"
-    version    = "v0.30.0"
+    version    = "v0.29.0"
     namespace  = "karpenter"
   }
 }

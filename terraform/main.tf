@@ -498,11 +498,22 @@ module "eks_developers_iam_group" {
 }
 
 
-
+# https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2009
+#####################
 # Kubernetes Provider
+#####################
+data "aws_eks_cluster" "default" {
+  name = module.eks.cluster_name
+}
+
+data "aws_eks_cluster_auth" "default" {
+  name = module.eks.cluster_name
+}
+
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.default.token
 
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"

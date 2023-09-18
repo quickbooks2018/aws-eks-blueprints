@@ -499,14 +499,14 @@ module "eks_developers_iam_group" {
 
 # https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2009
 data "aws_eks_cluster" "this" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
   depends_on = [
     module.eks.eks_managed_node_groups,
   ]
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
   depends_on = [
     module.eks.eks_managed_node_groups,
   ]

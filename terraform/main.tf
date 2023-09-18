@@ -497,11 +497,26 @@ module "eks_developers_iam_group" {
   custom_group_policy_arns          = [module.allow_assume_eks_developers_iam_policy.arn]
 }
 
+# https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2009
+data "aws_eks_cluster" "this" {
+  name = module.eks.cluster_id
+  depends_on = [
+    module.eks.eks_managed_node_groups,
+  ]
+}
 
+data "aws_eks_cluster_auth" "this" {
+  name = module.eks.cluster_id
+  depends_on = [
+    module.eks.eks_managed_node_groups,
+  ]
+}
 
+# https://github.com/terraform-aws-modules/terraform-aws-eks/issues/2009
 # Kubernetes Provider
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
+  token                  = data.aws_eks_cluster_auth.this.token
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
@@ -547,6 +562,7 @@ module "kubernetes_addons" {
 provider "helm" {
   kubernetes {
     host                   = module.eks.cluster_endpoint
+    token                  = data.aws_eks_cluster_auth.this.token
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
 
     exec {

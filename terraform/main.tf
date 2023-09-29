@@ -47,7 +47,7 @@ terraform {
 
 locals {
   cluster_name    = "cloudgeeks-eks-dev"
-  cluster_version = "1.25"
+  cluster_version = "1.27"
 }
 
 

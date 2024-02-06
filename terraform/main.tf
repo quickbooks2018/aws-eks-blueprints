@@ -169,6 +169,32 @@ module "eks" {
       ipv6_cidr_blocks = ["::/0"]
     }
 
+    # Note: This is required for Istio
+    ##########################################################################
+    # Allow All Traffic from Eks Cluster Security Group to Node Security Group
+    ##########################################################################
+    ingress_nodes_all = {
+      description                = "Ingress Allowed All from EKS Cluster Security Group"
+      protocol                   = "-1"
+      from_port                  = 0
+      to_port                    = 0
+      type                       = "ingress"
+      source_cluster_security_group = true
+      # source_node_security_group = true
+    }
+
+
+
+
+    egress_all = {
+      description      = "Egress allow all"
+      protocol         = "-1"
+      from_port        = 0
+      to_port          = 0
+      type             = "egress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
 
 
   }

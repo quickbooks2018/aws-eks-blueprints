@@ -144,6 +144,19 @@ module "eks" {
       type                       = "ingress"
       source_node_security_group = true
     }
+    # Note: This is not required for Istio
+    ##################################################################################
+    # Allow All Traffic from Managed Node Security Group to Eks Cluster Security Group
+    ###################################################################################
+    ingress_nodes_all = {
+      description                = "Ingress Allowed All from EKS Cluster Security Group"
+      protocol                   = "-1"
+      from_port                  = 0
+      to_port                    = 0
+      type                       = "ingress"
+      #source_cluster_security_group = true
+      source_node_security_group = true
+    }
   }
 
   node_security_group_additional_rules = {

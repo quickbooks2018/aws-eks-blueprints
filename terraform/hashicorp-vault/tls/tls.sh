@@ -45,6 +45,7 @@ DNS.2 = *.vault-internal.vault.svc.cluster.local
 DNS.3 = *.vault
 DNS.4 = vault
 DNS.5 = vault-active.vault.svc.cluster.local
+DNS.6 = vault.vault.svc
 IP.1 = 127.0.0.1
 EOF
 

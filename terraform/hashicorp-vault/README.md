@@ -7,6 +7,14 @@ k create ns vault
 cd tls
 chmod +x tls.sh
 ./tls.sh
+
+or run cloudflare-tls.sh
+
+kubectl create secret generic vault-tls \
+  --namespace vault \
+  --from-file=vault.key=/mnt/tls/vault-key.pem \
+  --from-file=vault.crt=/mnt/tls/vault.pem \
+  --from-file=vault.ca=/mnt/tls/ca.pem
 ```
 
 - 2nd Install the HashiCorp Vault Helm chart
@@ -28,10 +36,51 @@ bash -uvx ./kms.sh
 ```
 
 - 5th update the KMS ID in eks-values.yaml
+- First, create an aws-auth-config.hcl file with the following content:
+```bash
+cat <<EOF > aws-auth-config.hcl
+seal "awskms" {
+  region     = "us-east-1"  # Replace with your AWS region
+  kms_key_id = "94f86094-6a95-4b37-bde7-91d2ac6e74da"  # Replace with your KMS key ID
+}
+EOF
+```
+- Then, use kubectl commands to create a namespace and a secret:
+```bash
+kubectl -n vault create secret generic aws-auth --from-file=config.hcl=aws-auth-config.hcl 
+```
 
 - 6th 
 ```bash
 helm -n vault upgrade --install vault hashicorp/vault --version 0.28.0 --values eks-values.yaml --create-namespace --wait 
+```
+
+- Manually add annotation 
+```bash
+# From cloudformation stack see the role get the arn
+
+k edit sa/vault -n vault
+eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<ROLE_NAME>
+
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::058264369563:role/eksctl-cloudgeeks-eks-dev-addon-iamserviceacc-Role1-8z5zkEXDHGO4
+    meta.helm.sh/release-name: vault
+    meta.helm.sh/release-namespace: vault
+  creationTimestamp: "2024-07-17T05:23:26Z"
+  labels:
+    app.kubernetes.io/instance: vault
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vault
+    helm.sh/chart: vault-0.28.0
+  name: vault
+  namespace: vault
+  resourceVersion: "43591"
+  uid: 536c89fa-48b3-4938-95de-f6d1d749b17d
 ```
 
 - Unseal the Vault & copy the keys in secure place

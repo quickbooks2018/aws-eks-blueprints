@@ -31,7 +31,7 @@ server:
     size: 10Gi
   extraEnvironmentVars:
     VAULT_SEAL_TYPE: awskms
-    VAULT_AWSKMS_SEAL_KEY_ID: "94f86094-6a95-4b37-bde7-91d2ac6e74da"  # AWS KMS key ID
+    VAULT_AWSKMS_SEAL_KEY_ID: "215bfd03-a18e-4211-83f0-8ad4ce616047"  # AWS KMS key ID
     VAULT_CACERT: /vault/tls/vault.ca
     VAULT_TLSCERT: /vault/tls/vault.crt
     VAULT_TLSKEY: /vault/tls/vault.key
@@ -76,14 +76,20 @@ server:
           retry_join {
             leader_api_addr = "https://vault-0.vault-internal:8200"
             leader_ca_cert_file = "/vault/tls/vault.ca"
+            leader_client_cert_file = "/vault/tls/vault.crt"
+            leader_client_key_file = "/vault/tls/vault.key"
           }
           retry_join {
             leader_api_addr = "https://vault-1.vault-internal:8200"
             leader_ca_cert_file = "/vault/tls/vault.ca"
+            leader_client_cert_file = "/vault/tls/vault.crt"
+            leader_client_key_file = "/vault/tls/vault.key"
           }
           retry_join {
             leader_api_addr = "https://vault-2.vault-internal:8200"
             leader_ca_cert_file = "/vault/tls/vault.ca"
+            leader_client_cert_file = "/vault/tls/vault.crt"
+            leader_client_key_file = "/vault/tls/vault.key"
           }
         }
         

@@ -7,23 +7,23 @@ VALIDITY_DAYS=$((100 * 365)) # 100 years
 
 # Cleanup function to remove existing resources
 cleanup() {
-	  kubectl delete secret $SECRET_NAME -n $NAMESPACE --ignore-not-found
-  }
+  kubectl delete secret $SECRET_NAME -n $NAMESPACE --ignore-not-found
+}
 
-  # Run cleanup before starting the process
-  cleanup
+# Run cleanup before starting the process
+cleanup
 
-  # Create a self-signed CA
-  openssl genrsa -out ca.key 4096
-  openssl req -x509 -new -nodes -key ca.key -sha256 -days $VALIDITY_DAYS -out ca.crt -subj "/CN=Vault CA"
+# Create a self-signed CA
+openssl genrsa -out ca.key 4096
+openssl req -x509 -new -nodes -key ca.key -sha256 -days $VALIDITY_DAYS -out ca.crt -subj "/CN=Vault CA"
 
-  # Create the private key for Vault
-  openssl genrsa -out vault.key 2048
+# Create the private key for Vault
+openssl genrsa -out vault.key 2048
 
-  # Create the CSR configuration file
-  cat > vault-csr.conf <<EOF
-  [req]
-  default_bits = 2048
+# Create the CSR configuration file
+cat > vault-csr.conf <<EOF
+[req]
+default_bits = 2048
 prompt = no
 encrypt_key = yes
 default_md = sha256
@@ -61,8 +61,8 @@ openssl verify -CAfile ca.crt vault.crt
 kubectl create secret generic $SECRET_NAME \
    -n $NAMESPACE \
    --from-file=vault.key=vault.key \
-      --from-file=vault.crt=vault.crt \
-         --from-file=vault.ca=ca.crt
+   --from-file=vault.crt=vault.crt \
+   --from-file=vault.ca=ca.crt
 
 echo "TLS secret created successfully with 100-year validity."
 

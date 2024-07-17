@@ -4,7 +4,7 @@
 AWS_REGION="us-east-1"  # Replace with your AWS region
 EKS_CLUSTER_NAME="cloudgeeks-eks-dev"
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-KMS_KEY_ALIAS="alias/hashicorp-vault-auto-unseal-key-008"
+KMS_KEY_ALIAS="alias/hashicorp-vault-auto-unseal-key"
 POLICY_NAME="VaultKMSPolicy"
 SERVICE_ACCOUNT_NAME="vault"
 SERVICE_ACCOUNT_NAMESPACE="vault"

@@ -1,7 +1,7 @@
 # AWS HashiCorp Vault for eks
 
 - 1st Run Bash Script these will certs in kubernetes secret vault namespace
-- Note: if tls.sh is unable to retrieve the certificates, make sure to fix this script is working fine on aks (azure) if this not work check how to retrieve certificates from kubernetes, other you will see permission denied error 403
+- Note: if tls.sh is unable to retrieve the certificates, make sure to fix the issue. (this script is working fine on aks (azure) if this not work check how to retrieve certificates from kubernetes, other you will see permission denied error 403)
 ```bash
 k create ns vault
 

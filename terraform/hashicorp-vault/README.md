@@ -1,20 +1,13 @@
-# AWS HashiCorp Vault for aks
+# AWS HashiCorp Vault for eks
 
 - 1st Run Bash Script these will certs in kubernetes secret vault namespace
+- Note: if tls.sh is unable to retrieve the certificates, make sure to fix this script is working fine on aks (azure) if this not work check how to retrieve certificates from kubernetes, other you will see permission denied error 403
 ```bash
 k create ns vault
 
 cd tls
 chmod +x tls.sh
 ./tls.sh
-
-or run cloudflare-tls.sh
-
-kubectl create secret generic vault-tls \
-  --namespace vault \
-  --from-file=vault.key=/mnt/tls/vault-key.pem \
-  --from-file=vault.crt=/mnt/tls/vault.pem \
-  --from-file=vault.ca=/mnt/tls/ca.pem
 ```
 
 - 2nd Install the HashiCorp Vault Helm chart

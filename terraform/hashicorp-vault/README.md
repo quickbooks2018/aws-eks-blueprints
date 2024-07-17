@@ -35,22 +35,7 @@ helm -n vault upgrade --install vault hashicorp/vault --version 0.28.0 --values 
 bash -uvx ./kms.sh
 ```
 
-- 5th update the KMS ID in eks-values.yaml
-- First, create an aws-auth-config.hcl file with the following content:
-```bash
-cat <<EOF > aws-auth-config.hcl
-seal "awskms" {
-  region     = "us-east-1"  # Replace with your AWS region
-  kms_key_id = "94f86094-6a95-4b37-bde7-91d2ac6e74da"  # Replace with your KMS key ID
-}
-EOF
-```
-- Then, use kubectl commands to create a namespace and a secret:
-```bash
-kubectl -n vault create secret generic aws-auth --from-file=config.hcl=aws-auth-config.hcl 
-```
-
-- 6th 
+- 5th 
 ```bash
 helm -n vault upgrade --install vault hashicorp/vault --version 0.28.0 --values eks-values.yaml --create-namespace --wait 
 ```

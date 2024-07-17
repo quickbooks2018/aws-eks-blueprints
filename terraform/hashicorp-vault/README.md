@@ -1,13 +1,12 @@
 # AWS HashiCorp Vault for eks
 
 - 1st Run Bash Script these will certs in kubernetes secret vault namespace
-- Note: if tls.sh is unable to retrieve the certificates, make sure to fix the issue. (this script is working fine on aks (azure) if this not work check how to retrieve certificates from kubernetes, other you will see permission denied error 403)
+
 ```bash
 k create ns vault
 
-cd tls
-chmod +x tls.sh
-./tls.sh
+chmod +x cloudflare-tls.sh
+./clousflare-tls.sh
 ```
 
 - 2nd Install the HashiCorp Vault Helm chart
@@ -79,7 +78,7 @@ vault auth enable kubernetes
 vault write auth/kubernetes/config \
     token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
     kubernetes_host=https://kubernetes.default.svc \
-    kubernetes_ca_cert=@/vault/tls/vault.ca
+    kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 ```
 
 - Error: failed to login add (ca.pem) simply rerun the command
@@ -87,7 +86,7 @@ vault write auth/kubernetes/config \
 vault write auth/kubernetes/config \
     token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
     kubernetes_host=https://kubernetes.default.svc \
-    kubernetes_ca_cert=@/vault/tls/vault.ca
+    kubernetes_ca_cert=@/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
 ```
 - Application to Access Secrets in Vault, we need to setup the policy in vault, in order inject secrets in application pod
 - Basic Secret Injection

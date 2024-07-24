@@ -153,3 +153,35 @@ kubectl -n example-app get pods
 
 - issues
 - https://github.com/hashicorp/vault/issues/19952
+
+- VAULT HA Raft Mode
+```explain
+ this setup is using Vault in High Availability (HA) mode with Raft storage. Here's what happens if one node goes down and information about data replication:
+
+If one node goes down:
+
+The Vault cluster will continue to operate as long as a majority of nodes (quorum) are still available. In this case, with 3 replicas, the cluster can tolerate one node failure.
+If the failed node was the leader, an automatic leader election will occur among the remaining nodes to select a new leader.
+The cluster will continue to serve requests through the remaining active nodes.
+When the failed node comes back online, it will automatically rejoin the cluster and sync up with the current state.
+
+
+Data replication:
+
+Yes, the data is being replicated to other nodes. This configuration uses Raft storage, which is a consensus protocol that ensures data consistency across all nodes.
+Each node in the Raft cluster maintains a copy of the entire Vault data.
+When a write operation occurs, it is first committed to the leader node and then replicated to the follower nodes.
+The retry_join configuration in the Raft storage section ensures that nodes can find and connect to each other, facilitating data replication and cluster formation.
+
+
+Additional points:
+
+The configuration uses AWS EBS for persistent storage (dataStorage section with storageClass: "gp2"), which provides durability for each node's data.
+Auto-unsealing is configured using AWS KMS (seal "awskms" section), which allows nodes to automatically unseal themselves after a restart or failure.
+TLS is enabled for secure communication between nodes and clients.
+The setup includes 3 replicas (replicas: 3), which provides a good balance of availability and consistency.
+
+
+
+In summary, this Vault configuration is designed for high availability and data consistency. If one node goes down, the cluster remains operational, and data is continuously replicated across all active nodes to ensure consistency and durability.
+```

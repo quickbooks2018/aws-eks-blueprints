@@ -203,3 +203,13 @@ Read Replicas
 
 But for basic HA setup and operation, the Raft storage in open-source Vault is fully functional and production-ready.
 ```
+
+- Vault BackUp
+```backup
+vault operator raft snapshot save snapshot.snap
+
+vault operator raft snapshot restore <path-to-snapshot>
+
+kubectl cp ./backups/vault_backup_20240724_120000.snap vault-0:/tmp/
+kubectl exec vault-0 -- vault operator raft snapshot restore /tmp/vault_backup_20240724_120000.snap
+```

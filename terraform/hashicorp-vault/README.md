@@ -184,4 +184,22 @@ The setup includes 3 replicas (replicas: 3), which provides a good balance of av
 
 
 In summary, this Vault configuration is designed for high availability and data consistency. If one node goes down, the cluster remains operational, and data is continuously replicated across all active nodes to ensure consistency and durability.
+
+Raft mode is not an enterprise feature in Vault. It is available in both the open-source and enterprise versions of Vault.
+Raft storage was introduced in Vault 1.2 as an integrated storage option, and it's fully supported in the open-source version. This was a significant addition because it allowed users to set up highly available Vault clusters without relying on external storage backends like Consul.
+Key points about Raft in Vault:
+
+Open-source: Raft storage is available in the free, open-source version of Vault.
+Integrated: It's built directly into Vault, requiring no external dependencies for HA setup.
+Ease of use: Raft simplifies the deployment of HA Vault clusters, especially for users who don't want to manage a separate Consul cluster.
+Performance: It's designed to be performant and suitable for production use.
+Feature parity: Most features work identically whether you're using Raft or another storage backend.
+
+While Raft itself is not an enterprise feature, Vault Enterprise does offer some additional features that can be used with Raft storage, such as:
+
+Performance Replication
+Disaster Recovery Replication
+Read Replicas
+
+But for basic HA setup and operation, the Raft storage in open-source Vault is fully functional and production-ready.
 ```

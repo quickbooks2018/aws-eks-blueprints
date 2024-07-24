@@ -31,7 +31,7 @@ server:
     size: 10Gi
   extraEnvironmentVars:
     VAULT_SEAL_TYPE: awskms
-    VAULT_AWSKMS_SEAL_KEY_ID: "215bfd03-a18e-4211-83f0-8ad4ce616047"  # AWS KMS key ID
+    VAULT_AWSKMS_SEAL_KEY_ID: "215bfd03-a18e-4211-83f0-8ad4ce616047"  # AWS KMS key ID or KMS ARN
     VAULT_CACERT: /vault/tls/vault.ca
     VAULT_TLSCERT: /vault/tls/vault.crt
     VAULT_TLSKEY: /vault/tls/vault.key

@@ -71,11 +71,11 @@ module "eks" {
     # Allow All Traffic from Managed Node Security Group to Eks Cluster Security Group
     ###################################################################################
     ingress_nodes_all = {
-      description                = "Ingress Allowed All from EKS Cluster Security Group"
-      protocol                   = "-1"
-      from_port                  = 0
-      to_port                    = 0
-      type                       = "ingress"
+      description = "Ingress Allowed All from EKS Cluster Security Group"
+      protocol    = "-1"
+      from_port   = 0
+      to_port     = 0
+      type        = "ingress"
       #source_cluster_security_group = true
       source_node_security_group = true
     }
@@ -109,11 +109,11 @@ module "eks" {
     # Allow All Traffic from Eks Cluster Security Group to Node Security Group
     ##########################################################################
     ingress_nodes_all = {
-      description                = "Ingress Allowed All from EKS Cluster Security Group"
-      protocol                   = "-1"
-      from_port                  = 0
-      to_port                    = 0
-      type                       = "ingress"
+      description                   = "Ingress Allowed All from EKS Cluster Security Group"
+      protocol                      = "-1"
+      from_port                     = 0
+      to_port                       = 0
+      type                          = "ingress"
       source_cluster_security_group = true
       # source_node_security_group = true
     }
@@ -365,22 +365,22 @@ module "allow_developers_eks_console_access" {
   create_policy = true
 
   policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Effect": "Allow",
-        "Action": [
+        "Effect" : "Allow",
+        "Action" : [
           "eks:*"
         ],
-        "Resource": "*"
+        "Resource" : "*"
       },
       {
-        "Effect": "Allow",
-        "Action": "iam:PassRole",
-        "Resource": "*",
-        "Condition": {
-          "StringEquals": {
-            "iam:PassedToService": "eks.amazonaws.com"
+        "Effect" : "Allow",
+        "Action" : "iam:PassRole",
+        "Resource" : "*",
+        "Condition" : {
+          "StringEquals" : {
+            "iam:PassedToService" : "eks.amazonaws.com"
           }
         }
       }
@@ -405,15 +405,15 @@ module "eks_developers_iam_role" {
   # https://github.com/terraform-aws-modules/terraform-aws-iam/blob/master/examples/iam-assumable-role/main.tf
 
   custom_role_trust_policy = jsonencode({
-    "Version": "2012-10-17",
-    "Statement": [
+    "Version" : "2012-10-17",
+    "Statement" : [
       {
-        "Effect": "Allow",
-        "Action": "sts:AssumeRole",
-        "Principal": {
-          "AWS": data.aws_caller_identity.current.account_id
+        "Effect" : "Allow",
+        "Action" : "sts:AssumeRole",
+        "Principal" : {
+          "AWS" : data.aws_caller_identity.current.account_id
         },
-        "Condition": {}
+        "Condition" : {}
       }
     ]
   })
@@ -502,7 +502,7 @@ provider "kubernetes" {
 # https://github.com/aws-ia/terraform-aws-eks-blueprints/releases
 # Sub Module
 module "kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.32.1"
+  source                       = "github.com/aws-ia/terraform-aws-eks-blueprints//modules/kubernetes-addons?ref=v4.32.1"
   eks_cluster_id               = module.eks.cluster_name
   eks_cluster_endpoint         = module.eks.cluster_endpoint
   eks_oidc_provider            = module.eks.oidc_provider

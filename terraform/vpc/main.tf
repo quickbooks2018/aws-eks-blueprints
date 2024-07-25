@@ -1,5 +1,5 @@
 locals {
-  cluster_name    = "cloudgeeks-eks-dev"
+  cluster_name = "cloudgeeks-eks-dev"
 }
 
 #########
